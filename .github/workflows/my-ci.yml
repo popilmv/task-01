@@ -7,8 +7,13 @@ env:
 
 on:
   push:
-    branches: master, dev
-    tags: tag-1, tag-2
+    branches: ["main", "dev"]
+    tags: 
+     - '\d{1,2}\.\d{1,2}\.\d{1,2}'
+  pull_request:
+    tags: 
+     - '\d{1,2}\.\d{1,2}\.\d{1,2}'
+    branches: ["main", "dev"]
 
 jobs: 
   test: 
