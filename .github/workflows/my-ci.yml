@@ -16,7 +16,7 @@ jobs:
     
     steps: 
       - name: Copy file
-      - uses: actions/checkout@v1
+        uses: actions/checkout@v1
     
       - name: validate
       - run: gofmt -e main.go
