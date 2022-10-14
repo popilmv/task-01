@@ -7,7 +7,7 @@ env:
 
 on:
   push:
-    branches: main, dev
+    branches: master, dev
     tags: tag-1, tag-2
 
 jobs: 
