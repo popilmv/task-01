@@ -1,0 +1,16 @@
+test-job:
+image: golang:alpine
+stage: test
+script:
+ - go build -o main ./main.go 
+
+build-job:
+image: golang:alpine
+compile:
+  stage: build
+  script:
+    - mmkdir /app
+    - go build -o main ./main.go
+  artifacts:
+    paths:
+      - app

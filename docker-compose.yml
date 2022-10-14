@@ -1,0 +1,31 @@
+version: '3.1'
+
+services:
+ 
+ web-nginx-config:
+  image: nginx
+  restart: always
+  depends_on:
+   - "task-01"
+  volumes:
+   - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+  environment:
+   - NGINX_PORT=227
+  networks: 
+   -  nginx-networks  
+        
+ task-01:
+  build: .
+  restart: always
+  ports:
+   - "8080:8080"
+  networks: 
+   - nginx-networks
+
+networks: 
+ nginx-networks:
+  driver: bridge 
+
+
+
+ 

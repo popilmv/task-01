@@ -1,0 +1,9 @@
+FROM golang:alpine as build
+WORKDIR /app
+COPY . /home/app
+RUN go build -o main /home/app/main.go
+EXPOSE 8080
+
+FROM alpine:3.16.2 
+COPY --from=build /app/main .
+CMD ["./main"]
