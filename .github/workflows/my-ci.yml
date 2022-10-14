@@ -1,0 +1,46 @@
+name: myci
+env: 
+  DOCKERHUB_USERNAME: marina1327
+  DOCKERHUB_PASSWORD: Popilmv1327
+  COMMIT_BRANCH: main
+  DEFAULT_BRANCH: dev
+
+on:
+  push:
+    branches: main, dev
+    tags: tag-1, tag-2
+
+jobs: 
+  test: 
+    runs-on: golang:alpine
+    
+    steps: 
+      - name: Copy file
+      - uses: actions/checkout@v1
+    
+      - name: validate
+      - run: gofmt -e main.go
+  
+  build:
+    runs-on: docker:latest
+    needs: [test]
+    
+    steps: 
+      - name: login
+      - run: docker login -u ${{ DOCKERHUB_USERNAME }} -p ${{ DOCKERHUB_PASSWORD }}
+      
+      - name: ifs
+      - run: |
+          if ${{ env.COMMIT_BRANCH == env.DEFAULT_BRANCH }}; then
+            tag=""
+              echo "Running on default branch ${{ env.DEFAULT_BRANCH }}: tag = 'latest'"
+          else
+            tag=":${{ github.sha }}"
+              echo "Running on branch ${{ COMMIT_BRANCH }}: tag = ${{ github.sha }}
+          fi
+      
+      - name: build
+      - run: docker build -t "task-01:latest" .
+      - run: docker push ${{ DOCKERHUB_USERNAME }}/task-01:latest
+        
+          
