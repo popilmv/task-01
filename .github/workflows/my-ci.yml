@@ -26,8 +26,10 @@ jobs:
     needs: [test]
     
     steps: 
-      - name: login
+      - name: Copy file
         uses: actions/checkout@v1
+    
+      - name: login
         run: docker login -u ${{ DOCKERHUB_USERNAME }} -p ${{ DOCKERHUB_PASSWORD }}
       
       - name: ifs
@@ -42,6 +44,7 @@ jobs:
       
       - name: build
         run: docker build -t "task-01:latest" .
+      - name: push  
         run: docker push ${{ DOCKERHUB_USERNAME }}/task-01:latest
         
           
