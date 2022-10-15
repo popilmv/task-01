@@ -1,16 +1,17 @@
 name: myci
-on:
+env:
+  SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+  
+on: 
   push:
-    branches: 
-     - main, dev
+    branches: [ "main" , "dev" ]
     tags: 
-     - '\d{1,2}\.\d{1,2}\.\d{1,2}'
+      - '\d{1,2}\.\d{1,2}\.\d{1,2}'
   pull_request:
+    branches: [ "main" , "dev" ]
     tags: 
-     - '\d{1,2}\.\d{1,2}\.\d{1,2}'
-    branches: 
-     - main, dev 
-
+      - '\d{1,2}\.\d{1,2}\.\d{1,2}'
+      
 jobs: 
   test: 
     runs-on: golang:alpine
@@ -29,6 +30,7 @@ jobs:
     steps: 
       - name: Copy file
         uses: actions/checkout@v1
+        
     
       - name: login
         run: docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
@@ -47,5 +49,7 @@ jobs:
         run: docker build -t "task-01:latest" .
       - name: push  
         run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/task-01:latest
+        
+   
         
           
