@@ -1,19 +1,15 @@
 name: myci
-env: 
-  DOCKERHUB_USERNAME: marina1327
-  DOCKERHUB_PASSWORD: Popilmv1327
-  COMMIT_BRANCH: main
-  DEFAULT_BRANCH: dev
-
 on:
   push:
-    branches: ["main", "dev"]
+    branches: 
+     - main, dev
     tags: 
      - '\d{1,2}\.\d{1,2}\.\d{1,2}'
   pull_request:
     tags: 
      - '\d{1,2}\.\d{1,2}\.\d{1,2}'
-    branches: ["main", "dev"]
+    branches: 
+     - main, dev 
 
 jobs: 
   test: 
@@ -35,21 +31,21 @@ jobs:
         uses: actions/checkout@v1
     
       - name: login
-        run: docker login -u ${{ DOCKERHUB_USERNAME }} -p ${{ DOCKERHUB_PASSWORD }}
+        run: docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
       
       - name: ifs
         run: |
-          if ${{ env.COMMIT_BRANCH == env.DEFAULT_BRANCH }}; then
+          if ${{ secrets.COMMIT_BRANCH == secrets.DEFAULT_BRANCH }}; then
             tag=""
-              echo "Running on default branch ${{ env.DEFAULT_BRANCH }}: tag = 'latest'"
+              echo "Running on default branch ${{ secrets.DEFAULT_BRANCH }}: tag = 'latest'"
           else
             tag=":${{ github.sha }}"
-              echo "Running on branch ${{ COMMIT_BRANCH }}: tag = ${{ github.sha }}
+              echo "Running on branch ${{ secrets.COMMIT_BRANCH }}: tag = ${{ github.sha }}
           fi
       
       - name: build
         run: docker build -t "task-01:latest" .
       - name: push  
-        run: docker push ${{ DOCKERHUB_USERNAME }}/task-01:latest
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/task-01:latest
         
           
