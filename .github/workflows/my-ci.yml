@@ -49,7 +49,7 @@ jobs:
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKIN }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
       -
         name: Build and push
         uses: docker/build-push-action@v3
@@ -60,7 +60,7 @@ jobs:
 
       - name: Slack Notification
         if: failure()
-        uses: ravsamhq/notify-slack-action@v1
+        uses: rtcamp/action-slack-notify@v2
         env:
          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
          SLACK_COLOR: ${{ job.status }}
