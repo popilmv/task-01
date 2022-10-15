@@ -24,16 +24,13 @@ jobs:
       - name: validate
         run: gofmt -e main.go
         
-  notify:
-    runs-on: ubuntu-latest
-    needs: test
-    steps:
+      - name: notify 
       - uses: actions/checkout@v2
       - name: Notify slack
         uses: rtCamp/action-slack-notify@v2
         if: failure()
-    env:
-     SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        env:
+         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
   
   docker:
    runs-on: ubuntu-latest
@@ -62,16 +59,13 @@ jobs:
           push: true
           tags:  ${{ secrets.DOCKERHUB_USERNAME }}/task-01:latest
 
-  slack:
-    runs-on: ubuntu-latest
-    needs: docker
-    steps:
+      - name: notify 
       - uses: actions/checkout@v2
       - name: Notify slack
         uses: rtCamp/action-slack-notify@v2
         if: failure()
-    env:
-     SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        env:
+         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
           
 
 
