@@ -14,11 +14,14 @@ on:
       
 jobs: 
   test: 
-    runs-on: golang:alpine
-    
-    steps: 
-      - name: Copy file
-        uses: actions/checkout@v1
+   runs-on: ubuntu-latest
+   steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup
+        uses: actions/setup-go@v3
+        with:
+          go-version: alpine
     
       - name: validate
         run: gofmt -e main.go
