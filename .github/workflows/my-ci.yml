@@ -25,7 +25,8 @@ jobs:
         run: gofmt -e main.go
         
       - name: notify 
-      - uses: actions/checkout@v2
+        uses: actions/checkout@v2
+      
       - name: Notify slack
         uses: rtCamp/action-slack-notify@v2
         if: failure()
@@ -60,7 +61,7 @@ jobs:
           tags:  ${{ secrets.DOCKERHUB_USERNAME }}/task-01:latest
 
       - name: notify 
-      - uses: actions/checkout@v2
+        uses: actions/checkout@v2
       - name: Notify slack
         uses: rtCamp/action-slack-notify@v2
         if: failure()
