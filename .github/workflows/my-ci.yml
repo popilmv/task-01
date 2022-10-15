@@ -33,10 +33,13 @@ jobs:
     steps: 
       - name: Copy file
         uses: actions/checkout@v1
-    
-      - name: login
-        run: docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
-      
+        
+      - name: login 
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD  }}
+     
       - name: ifs
         run: |
           if ${{ secrets.COMMIT_BRANCH == secrets.DEFAULT_BRANCH }}; then
