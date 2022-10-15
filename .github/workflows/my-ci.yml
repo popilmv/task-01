@@ -23,16 +23,6 @@ jobs:
     
       - name: validate
         run: gofmt -e main.go
-        
-      - name: ifs
-        run: |
-          if ${{ secrets.COMMIT_BRANCH == secrets.DEFAULT_BRANCH }}; then
-            tag=""
-              echo "Running on default branch ${{ secrets.DEFAULT_BRANCH }}: tag = 'latest'"
-          else
-            tag=":${{ github.sha }}"
-              echo "Running on branch ${{ secrets.COMMIT_BRANCH }}: tag = ${{ github.sha }}
-          fi    
   
   build:
     runs-on: ubuntu-latest
