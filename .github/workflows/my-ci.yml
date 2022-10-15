@@ -24,23 +24,6 @@ jobs:
       - name: validate
         run: gofmt -e main.go
         
-  login:
-    runs-on: ubuntu-latest
-    steps:
-      -
-        name: Login to Docker
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-  
-  build:
-    runs-on: ubuntu-latest
-    needs: [test]
-    steps: 
-      - name: Copy file
-        uses: actions/checkout@v1
-     
       - name: ifs
         run: |
           if ${{ secrets.COMMIT_BRANCH == secrets.DEFAULT_BRANCH }}; then
@@ -49,12 +32,25 @@ jobs:
           else
             tag=":${{ github.sha }}"
               echo "Running on branch ${{ secrets.COMMIT_BRANCH }}: tag = ${{ github.sha }}
-          fi
-      
-      - name: build
+          fi    
+  
+  build:
+    runs-on: ubuntu-latest
+    needs: test
+    steps: 
+      - name: Copy file
+        uses: actions/checkout@v1
+      - name: Login 
+        run: docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build
         run: docker build -t "task-01:latest" .
       - name: push  
         run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/task-01:latest
+        
+
+      
+ 
+
         
    
         
