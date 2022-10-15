@@ -53,7 +53,7 @@ jobs:
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          password: ${{ secrets.DOCKERHUB_TOKIN }}
       -
         name: Build and push
         uses: docker/build-push-action@v3
@@ -64,7 +64,7 @@ jobs:
 
   slack:
     runs-on: ubuntu-latest
-    needs: test
+    needs: docker
     steps:
       - uses: actions/checkout@v2
       - name: Notify slack
