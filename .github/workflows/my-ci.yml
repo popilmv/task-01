@@ -21,7 +21,7 @@ jobs:
       - name: Setup
         uses: actions/setup-go@v3
         with:
-          go-version: alpine
+          go-version: 1.19
     
       - name: validate
         run: gofmt -e main.go
