@@ -23,8 +23,10 @@ jobs:
     
       - name: validate
         run: gofmt -e main.go
-  build:
-      steps:
+  
+  docker:
+   runs-on: ubuntu-latest
+   steps:
       -
         name: Checkout
         uses: actions/checkout@v3
