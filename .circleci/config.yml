@@ -1,33 +1,51 @@
-version: 2.1
-orbs:
-  slack: circleci/slack@4.9.3
-jobs:
-  notify:
-    docker:
-      - image: 'cimg/base:stable'
-        auth:
-          username: $DOCKERHUB_USERNAME
-          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
-    steps:
-      - slack/notify:
-          custom: |
-            {
-              "blocks": [
-                {
-                  "type": "section",
-                  "fields": [
-                    {
-                      "type": "plain_text",
-                      "text": "*Hello*",
-                      "emoji": true
-                    }
-                  ]
-                }
-              ]
-            }
-          event: always
+
+# orbs:
+#   slack: circleci/slack@4.10.1
+
 workflows:
-  send-notification:
+  version: 2
+  test_workflow:
     jobs:
-      - notify:
-          context: slack-secrets
+     - test
+     - push:
+          requires:
+            - test
+          filters:
+            branches: 
+              only: main, dev 
+            tags: 
+              only: '\d{1,2}\.\d{1,2}\.\d{1,2}'
+
+jobs:
+  test:
+   docker:
+    - image: circleci/golang:1.15.8
+   steps:
+    - checkout
+    - run: gofmt -e main.go
+
+  push:
+    machine:
+      image: ubuntu-2204
+    steps:
+      - checkout
+      - run:
+          name: Login
+          command: docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
+      - run:
+          name: Build
+          command: docker build -t $DOCKERHUB_USERNAME/task-01:latest .
+      - run:
+          name: Push
+          command: docker push $DOCKERHUB_USERNAME/task-01:lates
+  # notify:
+  #  docker: 
+  #      - image: cimg/base:stable
+  #  steps: 
+  #   - slack/notify:
+  #       event: fail
+  #       template: basic_fail_1
+  #       webhook: $SLACK_WEBHOOK
+
+
+      
