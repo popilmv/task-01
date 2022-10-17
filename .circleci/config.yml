@@ -23,7 +23,9 @@ jobs:
                 }
               ]
             }
-          event: always
+            template: basic_fail_1
+            webhook: $SLACK_WEBHOOK
+          event: fail
 workflows:
   send-notification:
     jobs:
