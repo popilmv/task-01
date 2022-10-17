@@ -39,7 +39,7 @@ jobs:
       - image: circleci/golang:1.15.8
      requires: 
       test
-     steps: go build -o main main.go
+     steps: go build main main.go
   
   push:
     machine:
