@@ -4,12 +4,15 @@
 #        fail_only: true
 #orbs:
 #  slack: circleci/slack@4.9.3
+orbs:
+  slack: circleci/slack@4.4.4
 
 workflows:
   version: 2
   test_workflow:
     jobs:
      - test
+     - notify
      - build:
           requires:
            - test
@@ -31,6 +34,12 @@ jobs:
     - checkout
     - run: gofmt -e main.go
 
+  notify:
+    docker: 
+      - image: cimg/base:stable
+    steps: 
+      - slack/notify:
+         event: fail
 
   build: 
      docker:
