@@ -1,5 +1,6 @@
+
 orbs:
-  slack: circleci/slack@4.4.4
+  slack: circleci/slack@4.10.1
 
 workflows:
   version: 2
@@ -30,6 +31,7 @@ jobs:
    steps: 
     - slack/notify:
         event: fail
+        template: basic_fail_1
         webhook: $SLACK_WEBHOOK
 
   push:
