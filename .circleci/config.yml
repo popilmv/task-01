@@ -29,14 +29,14 @@ jobs:
   test:
    docker:
     - image: docker:stable
-    - image: go:stable
+    - image: alpine:3.16
    steps:
     - checkout
     - run: gofmt -e main.go
 
   notify:
     docker: 
-      - image: cimg/base:stable
+      - image: docker:stable
     steps: 
       - slack/notify:
          event: fail
@@ -44,14 +44,23 @@ jobs:
   build: 
      docker:
       - image: docker:stable
-      - image: go:stable
+      - image: alpine:3.16
      requires: 
       test
      steps: go build -o main main.go
   
   push:
-    docker: 
-      -image: docker:stable
-    steps: 
+    machine:
+      image: ubuntu-2204:2022.04.2
+    steps:
       - checkout
+      - run:
+          name: Login to Dockerhub
+          command: docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
+      - run:
+          name: Building image
+          command: docker build -t $DOCKERHUB_USERNAME/test-01:latest .
+      - run:
+          name: Pushing to Dockerhub
+          command: docker push $DOCKERHUB_USERNAME/test-01:lates
       
