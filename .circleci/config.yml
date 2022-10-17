@@ -6,7 +6,7 @@ workflows:
   test_workflow:
     jobs:
      - test
-    #  - notify
+     - notify
      - push:
           requires:
             - test
@@ -24,12 +24,14 @@ jobs:
     - checkout
     - run: gofmt -e main.go
 
-  # notify:
-  #   docker: 
-  #     - image: cimg/base
-  #   steps: 
-  #     - slack/notify:
-  #        event: fail
+  notify:
+   docker: 
+       - image: cimg/base:stable
+   steps: 
+    - slack/notify:
+        event: fail
+        webhook: $SLACK_WEBHOOK
+
   push:
     machine:
       image: ubuntu-2204:2022.04.2
