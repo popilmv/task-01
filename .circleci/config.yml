@@ -1,37 +1,5 @@
-version: '2.1'
-orbs:
-  slack: circleci/slack@4.1
-
-jobs:
-  notify:
-    docker:
-      - image: 'cimg/base:stable'
-    steps:
-      - slack/notify:
-          custom: |
-            {
-              "blocks": [
-                {
-                  "type": "section",
-                  "fields": [
-                    {
-                      "type": "plain_text",
-                      "text": "*Smth went wrong*",
-                      "emoji": true
-                    }
-                  ]
-                }
-              ]
-            }
-            template: basic_fail_1
-            webhook: $SLACK_WEBHOOK
-          event: always
 workflows:
-  send-notification:
-    jobs:
-      - notify:
-          context: slack-secrets
-
+  version: 2
   test_workflow:
     jobs:
      - test
@@ -63,8 +31,8 @@ jobs:
         webhook: $SLACK_WEBHOOK
 
   push:
-    machine:
-      image: ubuntu-2204:2022.04.2
+    docker:
+      image: cimg/base:stable
     steps:
       - checkout
       - run:
@@ -77,19 +45,3 @@ jobs:
           name: Push
           command: docker push $DOCKERHUB_USERNAME/task-01:lates
       
-
-
-# workflows:
-
-#   test_workflow:
-#     jobs:
-#      - test
-#      - notify
-#      - push:
-#           requires:
-#             - test
-#           filters:
-#             branches: 
-#               only: main, dev 
-#             tags: 
-#               only: '\d{1,2}\.\d{1,2}\.\d{1,2}'
