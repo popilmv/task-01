@@ -7,12 +7,9 @@ workflows:
     jobs:
      - test
     #  - notify
-     - build:
-          requires:
-           - test
      - push:
           requires:
-            - build
+            - test
           filters:
             branches: 
               only: main, dev 
@@ -33,13 +30,6 @@ jobs:
   #   steps: 
   #     - slack/notify:
   #        event: fail
-
-  build: 
-     docker:
-      - image: circleci/golang:1.15.8
-     requires: 
-      test
-     steps: go build main main.go
   
   push:
     machine:
