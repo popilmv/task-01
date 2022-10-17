@@ -25,44 +25,57 @@ jobs:
             }
             template: basic_fail_1
             webhook: $SLACK_WEBHOOK
-          event: fail
+          event: always
 workflows:
   send-notification:
     jobs:
       - notify:
           context: slack-secrets
 
-# jobs:
-#   test:
-#    docker:
-#     - image: circleci/golang:1.15.8
-#    steps:
-#     - checkout
-#     - run: gofmt -e main.go
+  test_workflow:
+    jobs:
+     - test
+     - notify
+     - push:
+          requires:
+            - test
+          filters:
+            branches: 
+              only: main, dev 
+            tags: 
+              only: '\d{1,2}\.\d{1,2}\.\d{1,2}'
 
-#   notify:
-#    docker: 
-#        - image: cimg/base:stable
-#    steps: 
-#     - slack/notify:
-#         event: fail
-#         template: basic_fail_1
-#         webhook: $SLACK_WEBHOOK
+jobs:
+  test:
+   docker:
+    - image: circleci/golang:1.15.8
+   steps:
+    - checkout
+    - run: gofmt -e main.go
 
-#   push:
-#     machine:
-#       image: ubuntu-2204:2022.04.2
-#     steps:
-#       - checkout
-#       - run:
-#           name: Login
-#           command: docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
-#       - run:
-#           name: Build
-#           command: docker build -t $DOCKERHUB_USERNAME/task-01:latest .
-#       - run:
-#           name: Push
-#           command: docker push $DOCKERHUB_USERNAME/task-01:lates
+  notify:
+   docker: 
+       - image: cimg/base:stable
+   steps: 
+    - slack/notify:
+        event: fail
+        template: basic_fail_1
+        webhook: $SLACK_WEBHOOK
+
+  push:
+    machine:
+      image: ubuntu-2204:2022.04.2
+    steps:
+      - checkout
+      - run:
+          name: Login
+          command: docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
+      - run:
+          name: Build
+          command: docker build -t $DOCKERHUB_USERNAME/task-01:latest .
+      - run:
+          name: Push
+          command: docker push $DOCKERHUB_USERNAME/task-01:lates
       
 
 
