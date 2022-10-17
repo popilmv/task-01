@@ -7,14 +7,14 @@ workflows:
   test_workflow:
     jobs:
      - test
-     - push:
-          requires:
-            - test
-          filters:
-            branches: 
-              only: main, dev 
-            tags: 
-              only: '\d{1,2}\.\d{1,2}\.\d{1,2}'
+     - push
+          # requires:
+          #   - test
+      # filters:
+      #   branches: 
+      #     only: main, dev 
+      #   tags: 
+      #     only: '\d{1,2}\.\d{1,2}\.\d{1,2}'
 
 jobs:
   test:
