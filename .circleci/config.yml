@@ -1,0 +1,48 @@
+version: 2.1
+
+orbs:
+  slack: circleci/slack@4.10.1
+  
+workflows:
+  test-notify-build-docker:
+    jobs:
+      test: 
+       - image: cimg/base
+         working_directory: ~/app
+         steps:
+          - checkout
+         command: gofmt -e main.go
+      
+      notify:
+          context: slack-secrets
+          requires:
+            - test
+          event: fail
+        	template: basic_fail_1
+          
+      build: 
+        - image: cimg/base
+          working_directory: ~/app
+          requires:
+            - test
+          command: go build -o main main.go
+      notify:
+          context: slack-secrets
+          requires:
+            - build
+          event: fail
+        	template: basic_fail_1    
+      docker:
+       - image: building-on-ci
+        docker:
+        - image: circleci/buildpack-deps:stretch
+        steps:
+          - setup_remote_docker
+          - run:
+          name: Publish
+          command: |
+            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+            docker push $IMAGE_NAME:latest
+
+      
+            
