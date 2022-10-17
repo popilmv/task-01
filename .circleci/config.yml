@@ -1,9 +1,9 @@
-slack-fail-post-step: &slack-fail-post-step
-  post-steps:
-    - slack/status:
-        fail_only: true
-orbs:
-  slack: circleci/slack@4.9.3
+#slack-fail-post-step: &slack-fail-post-step
+#  post-steps:
+#    - slack/status:
+#        fail_only: true
+#orbs:
+#  slack: circleci/slack@4.9.3
 
 workflows:
   version: 2
@@ -25,7 +25,7 @@ workflows:
 jobs:
   test:
    docker:
-    - image: cimg/base
+    - image: cimg/base:stable 
     - image: cimg/go
    steps:
     - checkout
@@ -44,5 +44,5 @@ jobs:
     docker: 
       -image: cimg/base
     steps: 
-      - checkout:
+      - checkout
       
