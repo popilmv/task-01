@@ -28,15 +28,15 @@ workflows:
 jobs:
   test:
    docker:
-    - image: docker:stable
-    - image: alpine:3.16
+    - image: cimg/base
+    - image: cimg/go
    steps:
     - checkout
     - run: gofmt -e main.go
 
   notify:
     docker: 
-      - image: docker:stable
+      - image: cimg/base
     steps: 
       - slack/notify:
          event: fail
