@@ -30,19 +30,18 @@ jobs:
   #   steps: 
   #     - slack/notify:
   #        event: fail
-  
   push:
     machine:
       image: ubuntu-2204:2022.04.2
     steps:
       - checkout
       - run:
-          name: Login to Dockerhub
+          name: Login
           command: docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
       - run:
-          name: Building image
-          command: docker build -t $DOCKERHUB_USERNAME/test-01:latest .
+          name: Build
+          command: docker build -t $DOCKERHUB_USERNAME/task-01:latest .
       - run:
-          name: Pushing to Dockerhub
-          command: docker push $DOCKERHUB_USERNAME/test-01:lates
+          name: Push
+          command: docker push $DOCKERHUB_USERNAME/task-01:lates
       
