@@ -1,47 +1,33 @@
-workflows:
-  version: 2
-  test_workflow:
-    jobs:
-     - test
-     - notify
-     - push:
-          requires:
-            - test
-          filters:
-            branches: 
-              only: main, dev 
-            tags: 
-              only: '\d{1,2}\.\d{1,2}\.\d{1,2}'
-
+version: 2.1
+orbs:
+  slack: circleci/slack@4.9.3
 jobs:
-  test:
-   docker:
-    - image: circleci/golang:1.15.8
-   steps:
-    - checkout
-    - run: gofmt -e main.go
-
   notify:
-   docker: 
-       - image: cimg/base:stable
-   steps: 
-       - run:
-         name: curl
-         command: |
-         curl -X POST -H 'Content-type: application/json' --data '{"text":"Curl test!"}' https://hooks.slack.com/services/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
-
-  push:
     docker:
-      image: cimg/base:stable
+      - image: 'cimg/base:stable'
+        auth:
+          username: $DOCKERHUB_USERNAME
+          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
     steps:
-      - checkout
-      - run:
-          name: Login
-          command: docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
-      - run:
-          name: Build
-          command: docker build -t $DOCKERHUB_USERNAME/task-01:latest .
-      - run:
-          name: Push
-          command: docker push $DOCKERHUB_USERNAME/task-01:lates
-      
+      - slack/notify:
+          custom: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "plain_text",
+                      "text": "*Hello*",
+                      "emoji": true
+                    }
+                  ]
+                }
+              ]
+            }
+          event: always
+workflows:
+  send-notification:
+    jobs:
+      - notify:
+          context: slack-secrets
