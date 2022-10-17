@@ -23,7 +23,7 @@ jobs:
                 }
               ]
             }
-          event: fail
+          event: always
 workflows:
   send-notification:
     jobs:
