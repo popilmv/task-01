@@ -1,9 +1,3 @@
-#slack-fail-post-step: &slack-fail-post-step
-#  post-steps:
-#    - slack/status:
-#        fail_only: true
-#orbs:
-#  slack: circleci/slack@4.9.3
 orbs:
   slack: circleci/slack@4.4.4
 
