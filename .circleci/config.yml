@@ -26,13 +26,14 @@ jobs:
 
   push:
     machine:
-     image: ubuntu-2204:2022.04.2
+      image: ubuntu-2204:2022.04.2
     steps:
       - checkout
       - run:
           name: Login
+          command: docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_TOKEN
           # command: docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
-          command: echo "$DOCKER_PASSWORD" | docker login --username $DOCKER_USERNAME --password-stdin
+          # command: echo "$DOCKER_PASSWORD" | docker login --username $DOCKER_USERNAME --password-stdin
       - run:
           name: Build
           command: docker build -t $DOCKERHUB_USERNAME/task-01:latest .
