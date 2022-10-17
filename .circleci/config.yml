@@ -39,7 +39,7 @@ jobs:
           command: docker build -t $DOCKERHUB_USERNAME/task-01:latest .
       - run:
           name: Push
-          command: docker push $DOCKERHUB_USERNAME/task-01:lates
+          command: docker push $DOCKERHUB_USERNAME/task-01:latest
   # notify:
   #  docker: 
   #      - image: cimg/base:stable
