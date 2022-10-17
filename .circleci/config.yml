@@ -12,7 +12,7 @@ workflows:
   test_workflow:
     jobs:
      - test
-     - notify
+    #  - notify
      - build:
           requires:
            - test
@@ -33,17 +33,16 @@ jobs:
     - checkout
     - run: gofmt -e main.go
 
-  notify:
-    docker: 
-      - image: cimg/base
-    steps: 
-      - slack/notify:
-         event: fail
+  # notify:
+  #   docker: 
+  #     - image: cimg/base
+  #   steps: 
+  #     - slack/notify:
+  #        event: fail
 
   build: 
      docker:
-      - image: docker:stable
-      - image: alpine:3.16
+      - image: circleci/golang:1.15.8
      requires: 
       test
      steps: go build -o main main.go
