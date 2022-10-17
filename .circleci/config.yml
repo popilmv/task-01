@@ -1,51 +1,80 @@
-
+version: '2.1'
 orbs:
-  slack: circleci/slack@4.10.1
-
-workflows:
-  version: 2
-  test_workflow:
-    jobs:
-     - test
-     - notify
-     - push:
-          requires:
-            - test
-          filters:
-            branches: 
-              only: main, dev 
-            tags: 
-              only: '\d{1,2}\.\d{1,2}\.\d{1,2}'
+  slack: circleci/slack@4.1
 
 jobs:
-  test:
-   docker:
-    - image: circleci/golang:1.15.8
-   steps:
-    - checkout
-    - run: gofmt -e main.go
-
   notify:
-   docker: 
-       - image: cimg/base:stable
-   steps: 
-    - slack/notify:
-        event: fail
-        template: basic_fail_1
-        webhook: $SLACK_WEBHOOK
-
-  push:
-    machine:
-      image: ubuntu-2204:2022.04.2
+    docker:
+      - image: 'cimg/base:stable'
     steps:
-      - checkout
-      - run:
-          name: Login
-          command: docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
-      - run:
-          name: Build
-          command: docker build -t $DOCKERHUB_USERNAME/task-01:latest .
-      - run:
-          name: Push
-          command: docker push $DOCKERHUB_USERNAME/task-01:lates
+      - slack/notify:
+          custom: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "plain_text",
+                      "text": "*Smth went wrong*",
+                      "emoji": true
+                    }
+                  ]
+                }
+              ]
+            }
+          event: fail
+workflows:
+  send-notification:
+    jobs:
+      - notify:
+          context: slack-secrets
+
+# jobs:
+#   test:
+#    docker:
+#     - image: circleci/golang:1.15.8
+#    steps:
+#     - checkout
+#     - run: gofmt -e main.go
+
+#   notify:
+#    docker: 
+#        - image: cimg/base:stable
+#    steps: 
+#     - slack/notify:
+#         event: fail
+#         template: basic_fail_1
+#         webhook: $SLACK_WEBHOOK
+
+#   push:
+#     machine:
+#       image: ubuntu-2204:2022.04.2
+#     steps:
+#       - checkout
+#       - run:
+#           name: Login
+#           command: docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
+#       - run:
+#           name: Build
+#           command: docker build -t $DOCKERHUB_USERNAME/task-01:latest .
+#       - run:
+#           name: Push
+#           command: docker push $DOCKERHUB_USERNAME/task-01:lates
       
+
+
+# workflows:
+
+#   test_workflow:
+#     jobs:
+#      - test
+#      - notify
+#      - push:
+#           requires:
+#             - test
+#           filters:
+#             branches: 
+#               only: main, dev 
+#             tags: 
+#               only: '\d{1,2}\.\d{1,2}\.\d{1,2}'
