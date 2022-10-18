@@ -18,7 +18,7 @@ jobs:
       - checkout
       - run:
           name: Login
-          command: docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_TOKiN
+          command: docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_TOKEN
           # command: docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
           # command: echo "$DOCKER_PASSWORD" | docker login --username $DOCKER_USERNAME --password-stdin
       - run:
