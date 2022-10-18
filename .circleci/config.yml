@@ -14,61 +14,49 @@ jobs:
       #     #   curl -X POST -H 'Content-type: application/json' --data '{"text":"Failed pipeline, marina1327/task-01"}' https://hooks.slack.com/services/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
       #     # when: on_fail  
   push:
-    # machine:
-    #   # image: ubuntu-2204:2022.04.2
     docker:
-      - image: cimg/base:stable
+      - image: 'cimg/base:stable'
+        auth:
+          username: $DOCKERHUB_USERNAME
+          password: $DOCKERHUB_TOKEN
     steps:
       - checkout
+      - setup_remote_docker
       - run:
-          name: Login
-          command: docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_TOKEN
-          # command: docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
-          # command: echo "$DOCKER_PASSWORD" | docker login --username $DOCKER_USERNAME --password-stdin
-      - run:
-          name: Build
-          command: docker build -t $DOCKERHUB_USERNAME/task-01:latest .
-      - run:
-          name: Push
-          command: docker push $DOCKERHUB_USERNAME/task-01:latest
-
+          name: Build docker
+          command: |
+            docker build -t $DOCKERHUB_USERNAME/task-01:latest .
+            echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+            docker push $DOCKERHUB_USERNAME/task-01:latest
       - slack/notify:
-         event: fail
-         template: basic_fail_1
-      # - run:
-      #     name: Slack notifications
-      #     command: >
-      #       curl -X POST -H 'Content-type: application/json' --data '{"text":"Failed pipeline, marina1327/task-01"}' https://hooks.slack.com/services/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
-      #     when: on_fail 
+            event: fail
+            template: basic_fail_1
 
-
-      # - slack/notify:
-      #       event: pass
-      #       template: success_tagged_deploy_1 
-      # image: 'cimg/base:stable'
-      #     auth:
-      #       username: marina1327
-      #       password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
-      # steps:
-      #   - slack/notify:
-      #       event: always
-      #       template: basic_fail_1
-      #       custom: |
-      #         {
-      #           "blocks": [
-      #             {
-      #               "type": "section",
-      #               "fields": [
-      #                 {
-      #                   "type": "plain_text",
-      #                   "text": "*Failed push event*",
-      #                   "emoji": true
-      #                 }
-      #               ]
-      #             }
-      #           ]
-      #         }
-
+  # notify:
+  #   docker:
+  #     - image: 'cimg/base:stable'
+  #       auth:
+  #         username: marina1327
+  #         password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
+  #   steps:
+  #     - slack/notify:
+  #         event: fail
+  #         template: basic_fail_1
+  #         custom: |
+  #           {
+  #             "blocks": [
+  #               {
+  #                 "type": "section",
+  #                 "fields": [
+  #                   {
+  #                     "type": "plain_text",
+  #                     "text": "*Failed push event*",
+  #                     "emoji": true
+  #                   }
+  #                 ]
+  #               }
+  #             ]
+  #           }
           
 workflows:
   circle-workflow:
@@ -95,3 +83,5 @@ workflows:
                 - \d{1,2}\.\d{1,2}\.\d{1,2}
       # - notify:
       #     context: slack-secrets
+      #     requires:
+      #       - push
