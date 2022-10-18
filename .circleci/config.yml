@@ -42,6 +42,8 @@ jobs:
           password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
     steps:
       - slack/notify:
+          event: fail
+          template: basic_fail_1
           custom: |
             {
               "blocks": [
@@ -57,8 +59,8 @@ jobs:
                 }
               ]
             }
-          event: fail
-          template: basic_fail_1
+
+          
 workflows:
   circle-workflow:
     jobs:
