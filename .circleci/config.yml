@@ -86,3 +86,5 @@ workflows:
                 - \d{1,2}\.\d{1,2}\.\d{1,2}
       - notify:
           context: slack-secrets
+          requires:
+            - push
