@@ -50,14 +50,15 @@ jobs:
                   "fields": [
                     {
                       "type": "plain_text",
-                      "text": "*This is SPARTA*",
+                      "text": "*Failed push event*",
                       "emoji": true
                     }
                   ]
                 }
               ]
             }
-          event: always
+          event: fail
+          template: basic_fail_1
 workflows:
   circle-workflow:
     jobs:
