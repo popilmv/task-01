@@ -18,7 +18,7 @@ jobs:
       - image: 'cimg/base:stable'
         auth:
           username: $DOCKERHUB_USERNAME
-          password: $DOCKERHUB_TOKEN
+          password: $DOCKERHUB_TOKN
     steps:
       - checkout
       - setup_remote_docker
