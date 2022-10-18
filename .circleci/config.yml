@@ -26,7 +26,7 @@ jobs:
           name: Build docker
           command: |
             docker build -t $DOCKERHUB_USERNAME/task-01:latest .
-            echo "$1DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+            echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
             docker push $DOCKERHUB_USERNAME/task-01:latest
       - slack/notify:
           event: fail
