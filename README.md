@@ -6,3 +6,5 @@ The repository also includes the nginx directory with the configuration and the 
 
 
 [![myci](https://github.com/popilmv/task-01/actions/workflows/my-ci.yml/badge.svg?branch=main&event=check_run)](https://github.com/popilmv/task-01/actions/workflows/my-ci.yml)
+
+:)
